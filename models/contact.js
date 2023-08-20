@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
-// const { handleMongooseError } = require("../helpers/handleMongooseError");
+const { handleMongooseError } = require("../helpers");
 
 const phoneRegex = /^\d{3}-\d{3}-\d{4}$/;
 
@@ -22,12 +22,17 @@ const contactSchema = new Schema(
       type: Boolean,
       default: false,
       required: true,
-    }
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
   },
   { versionKey: false, timestamps: true }
 );
 
-// contactSchema.post("save", handleMongooseError);
+contactSchema.post("save", handleMongooseError);
 
 const validationSchema = Joi.object({
   name: Joi.string().required(),
